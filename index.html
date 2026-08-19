@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Casa Haven</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="hero-bg-stage" class="hero-bg-stage">
+  <div class="hero-bg-layer active" style="background-image:url('assets/hero_page_bg.webp')"></div>
+  <div class="hero-bg-layer" style="background-image:url('assets/hero_page_bg2.webp')"></div>
+  <div class="hero-bg-layer" style="background-image:url('assets/hero_page_bg3.webp')"></div>
+</div>
+
+<nav class="nav">
+  <div class="nav-brand" data-nav="home">
+    <div class="logo-slot"><img src="assets/ch_logo_v1.webp" alt="Casa Haven logo" class="logo-img"></div>
+  </div>
+  <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+  </button>
+  <div class="nav-overlay" id="nav-overlay"></div>
+  <div class="nav-drawer" id="nav-drawer">
+    <div class="nav-drawer-header">
+      <div class="nav-brand" data-nav="home">
+        <div class="logo-slot"><img src="assets/ch_logo_v1.webp" alt="Casa Haven logo" class="logo-img"></div>
+      </div>
+      <button type="button" class="nav-close" id="nav-close" aria-label="Close menu">&times;</button>
+    </div>
+    <div class="nav-links">
+      <a href="#" data-nav="home">Home</a>
+      <a href="#" data-nav="booking">Booking</a>
+      <a href="#" data-nav="facilities">Facilities</a>
+      <a href="#" data-nav="highlights">Suite</a>
+      <a href="#" data-nav="services">Services</a>
+      <a href="#" data-nav="promos">Promos</a>
+      <a href="#" data-nav="contact">Contact</a>
+    </div>
+    <a class="btn-message" href="https://m.me/casahaven2026" target="_blank" rel="noopener">Message Us</a>
+  </div>
+</nav>
+
+<!-- HOME -->
+<main data-page="home" class="page">
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Shell Residences Tower C · Pasay, NCR</span>
+      <h1>Your home away from home</h1>
+      <p class="hero-sub">A cozy escape near SM Mall of Asia. Curated stays, relaxing vibes, and a prime location in Pasay City — message us to book your stay</p>
+      <div class="hero-ctas">
+        <button type="button" class="btn-pill" data-goto="booking">Book Your Stay</button>
+        <a class="link-italic-white" href="https://m.me/casahaven2026" target="_blank" rel="noopener">Message Us</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="about-section">
+    <div class="wrap tags-wrap">
+      <div class="tags-card elev-sm">
+        <div class="tag-item"><span class="dot">·</span><span>Cozy Stay</span></div>
+        <div class="tag-item"><span class="dot">·</span><span>Stylish Space</span></div>
+        <div class="tag-item"><span class="dot">·</span><span>Prime Location</span></div>
+        <div class="tag-item"><span class="dot">·</span><span>Comfort You Deserve</span></div>
+      </div>
+    </div>
+
+    <div class="wrap about-grid">
+      <div class="about-text-fade">
+        <span class="label-strong">About Us</span>
+        <h2>Curated stays, minutes from MOA</h2>
+        <p class="body-text">Casa Haven sits on the 14th floor of Shell Residences Tower C in Pasay City — a fully furnished unit built for comfort, style, and easy access to Manila's biggest attractions.</p>
+        <p class="body-text">📍 Unit 1451, 14th Floor, Shell Residences Tower C, Pasay City (near MOA)</p>
+      </div>
+      <div class="arch-photo about-photo-fade"><img src="assets/bedroom.webp" alt="Casa Haven bedroom"></div>
+    </div>
+  </div>
+
+  <div class="wrap reviews-wrap">
+    <h2>Guest Reviews</h2>
+    <div class="reviews-carousel">
+      <button type="button" class="review-nav review-nav-prev" id="review-prev" aria-label="Previous review">&lsaquo;</button>
+      <div class="reviews-viewport">
+        <div class="reviews-grid" id="reviews-grid"></div>
+      </div>
+      <button type="button" class="review-nav review-nav-next" id="review-next" aria-label="Next review">&rsaquo;</button>
+    </div>
+  </div>
+</main>
+
+<!-- BOOKING -->
+<section data-page="booking" class="page" hidden>
+  <div class="wrap">
+    <span class="label-strong">Booking</span>
+    <h1 class="page-title">Plan your stay at Casa Haven</h1>
+    <p class="body-text lede">Check our updated July 2026 availability and secure your preferred dates before they're fully booked. Message us with your preferred dates and number of guests to reserve your stay.</p>
+
+    <div class="info-cards">
+      <div class="card"><span class="card-kicker">Check-in</span><p class="card-title">2:00 PM</p></div>
+      <div class="card"><span class="card-kicker">Check-out</span><p class="card-title">12:00 NN</p></div>
+      <div class="card"><span class="card-kicker">Location</span><p class="card-title" style="font-size:16px">Tower C, Unit 1451</p></div>
+    </div>
+
+    <h2>Stay Rates</h2>
+    <table class="table">
+      <thead><tr><th>Guests</th><th>Weekdays (Mon–Thu)</th><th>Weekends (Fri–Sun)</th></tr></thead>
+      <tbody>
+        <tr><td>2 Guests</td><td>₱1,900</td><td>₱2,000</td></tr>
+        <tr><td>3–4 Guests</td><td>₱2,400</td><td>₱2,500</td></tr>
+      </tbody>
+    </table>
+    <p class="fine-print">Additional guest: ₱500 per person.</p>
+
+    <h2>Pool Access</h2>
+    <table class="table mb-lg">
+      <thead><tr><th>When</th><th>Rate</th></tr></thead>
+      <tbody>
+        <tr><td>Weekdays</td><td>₱150 per person</td></tr>
+        <tr><td>Weekends &amp; Holidays</td><td>₱300 per person</td></tr>
+      </tbody>
+    </table>
+
+    <h2>July 2026 Availability</h2>
+    <div class="calendar" id="calendar"></div>
+    <p class="fine-print mb-lg">All dates shown are currently open. Message us to confirm and lock in your booking.</p>
+
+    <hr class="hr">
+
+    <div id="booking-form-wrap">
+      <h2>Send a Booking Inquiry</h2>
+      <form id="booking-form" class="form-grid">
+        <div class="field"><label>Full Name</label><input class="input" name="name" required></div>
+        <div class="field"><label>Contact Number</label><input class="input" name="contact" required></div>
+        <div class="form-break"></div>
+        <div class="field"><label>Check-in Date</label><input class="input" type="date" name="checkin"></div>
+        <div class="field"><label>Check-out Date</label><input class="input" type="date" name="checkout"><span class="field-error" id="booking-date-error" hidden>Check-out must be at least one day after check-in.</span></div>
+        <div class="field"><label>Number of Guests</label><input class="input" type="number" min="1" max="4" name="guests" value="2"></div>
+        <div class="field span-all"><label>Message (optional)</label><textarea class="input" name="message"></textarea><span class="word-count" id="booking-message-count">Limit: 200 words max</span></div>
+        <div class="span-all"><button type="submit" class="btn btn-primary">Send Inquiry</button></div>
+      </form>
+    </div>
+    <div id="booking-confirm" class="card elev-sm" style="max-width:750px" hidden>
+      <span class="card-kicker">Inquiry ready</span>
+      <p class="card-title" id="booking-thanks"></p>
+      <p class="card-body">Send us this summary on Messenger and we'll confirm availability:</p>
+      <p class="card-body" id="booking-summary" style="white-space:pre-line;font-weight:600"></p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="https://m.me/casahaven2026" target="_blank" rel="noopener">Open Messenger</a>
+        <button type="button" class="btn btn-secondary" id="booking-edit">Edit Inquiry</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FACILITIES -->
+<section data-page="facilities" class="page" hidden>
+  <div class="wrap">
+    <span class="label-strong page-fade">Room Facilities</span>
+    <h1 class="page-title page-fade">Everything you need, right in the room</h1>
+    <div class="numbered-list">
+      <div class="numbered-row"><p class="num">01</p><div><h3 class="page-fade">Cozy &amp; Stylish Interiors</h3><p class="body-text page-fade">A fully furnished unit designed for comfort, with a warm, home-like feel from the moment you walk in.</p></div></div>
+      <div class="numbered-row"><p class="num">02</p><div><h3 class="page-fade">Fast WiFi &amp; Netflix</h3><p class="body-text page-fade">Stay connected and entertained with reliable high-speed internet throughout the unit.</p></div></div>
+      <div class="numbered-row"><p class="num">03</p><div><h3 class="page-fade">Air-Conditioned Comfort</h3><p class="body-text page-fade">A cool, comfortable space no matter the weather outside.</p></div></div>
+      <div class="numbered-row"><p class="num">04</p><div><h3 class="page-fade">Fully Equipped Kitchen</h3><p class="body-text page-fade">Cook your own meals with a stocked kitchen — great for longer stays.</p></div></div>
+      <div class="numbered-row"><p class="num">05</p><div><h3 class="page-fade">24/7 Security &amp; Elevator Access</h3><p class="body-text page-fade">Round-the-clock building security and direct elevator access to your floor.</p></div></div>
+      <div class="numbered-row"><p class="num">06</p><div><h3 class="page-fade">Prime Location</h3><p class="body-text page-fade">Minutes from SM Mall of Asia and the rest of the Bay Area.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SUITE HIGHLIGHTS -->
+<section data-page="highlights" class="page" hidden>
+  <div class="wrap">
+    <span class="label-strong">Suite Highlights</span>
+    <h1 class="page-title">Cozy, comfortable, convenient</h1>
+    <div class="tag-row">
+      <span class="tag tag-outline">Good for 1–4 Pax</span>
+      <span class="tag tag-outline">Balcony City View</span>
+      <span class="tag tag-outline">Netflix + Fast WiFi</span>
+      <span class="tag tag-outline">Fully Furnished</span>
+      <span class="tag tag-outline">Short &amp; Long Stay</span>
+      <span class="tag tag-outline">Open for Walk-ins</span>
+    </div>
+    <div class="reviews-carousel">
+      <button type="button" class="review-nav review-nav-prev" id="suite-photo-prev" aria-label="Previous photo">&lsaquo;</button>
+      <div class="reviews-viewport">
+        <div class="suite-photos-grid" id="suite-photos-grid"></div>
+      </div>
+      <button type="button" class="review-nav review-nav-next" id="suite-photo-next" aria-label="Next photo">&rsaquo;</button>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section data-page="services" class="page" hidden>
+  <div class="wrap">
+    <span class="label-strong page-fade">Hotel Services</span>
+    <h1 class="page-title page-fade">Resort-style amenities at Shell Residences</h1>
+    <div class="numbered-list mb-lg">
+      <div class="numbered-row"><p class="num">01</p><div><h3 class="page-fade">Swimming Pools</h3><p class="body-text page-fade">Resort-style pools within the Shell Residences complex — pool access rates apply per guest.</p></div></div>
+      <div class="numbered-row"><p class="num">02</p><div><h3 class="page-fade">Kids' Playground &amp; Splash Pad</h3><p class="body-text page-fade">A dedicated play area and splash pad, great for families staying with children.</p></div></div>
+      <div class="numbered-row"><p class="num">03</p><div><h3 class="page-fade">24/7 Security</h3><p class="body-text page-fade">Manned security and CCTV coverage throughout the property, day and night.</p></div></div>
+      <div class="numbered-row"><p class="num">04</p><div><h3 class="page-fade">Elevator Access</h3><p class="body-text page-fade">Direct elevator access from the lobby to every residential floor.</p></div></div>
+      <div class="numbered-row"><p class="num">05</p><div><h3 class="page-fade">Landscaped Grounds &amp; Gazebos</h3><p class="body-text page-fade">Palm-lined walkways and shaded gazebos for relaxing outside the unit.</p></div></div>
+      <div class="numbered-row"><p class="num">06</p><div><h3 class="page-fade">Elegant Lobby &amp; Reception</h3><p class="body-text page-fade">A well-appointed lobby and reception area for guests and visitors.</p></div></div>
+    </div>
+    <div class="photo-grid photo-grid-6">
+      <div class="photo-block page-fade">Photo — Pool (Day)</div>
+      <div class="photo-block page-fade">Photo — Pool (Night)</div>
+      <div class="photo-block page-fade">Photo — Lobby</div>
+      <div class="photo-block page-fade">Photo — Reception Lounge</div>
+      <div class="photo-block page-fade">Photo — Kids' Playground</div>
+      <div class="photo-block page-fade">Photo — Splash Pad</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROMOS -->
+<section data-page="promos" class="page" hidden>
+  <div class="wrap">
+    <span class="label-strong">Promos &amp; Offers</span>
+    <h1 class="page-title">Nothing live right now</h1>
+    <div class="card" style="max-width:640px">
+      <p class="card-body">Our last promo has ended — thank you to everyone who took advantage of it. We appreciate your support.</p>
+      <p class="card-body">Stay tuned for our next exclusive offer. Follow our Facebook page or message us to be the first to know.</p>
+      <a class="btn btn-primary" style="margin-top:8px" href="https://m.me/casahaven2026" target="_blank" rel="noopener">Message Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section data-page="contact" class="page" hidden>
+  <div class="wrap">
+    <span class="label-strong">Contact</span>
+    <h1 class="page-title">Let's plan your stay</h1>
+
+    <div class="info-cards">
+      <div class="card"><span class="card-kicker">Facebook</span><p class="card-title" style="font-size:16px">Casa Haven</p><a class="btn btn-secondary" style="margin-top:12px" href="https://www.facebook.com/casahaven2026" target="_blank" rel="noopener">View Page</a></div>
+      <div class="card"><span class="card-kicker">Call / Viber</span><p class="card-title" style="font-size:16px">0947 186 4162</p><a class="btn btn-secondary" style="margin-top:12px" href="tel:09471864162">Call Now</a></div>
+      <div class="card"><span class="card-kicker">Messenger</span><p class="card-title" style="font-size:16px">Fastest response</p><a class="btn btn-primary" style="margin-top:12px" href="https://m.me/casahaven2026" target="_blank" rel="noopener">Open Chat</a></div>
+    </div>
+
+    <div class="contact-grid">
+      <div>
+        <div id="contact-form-wrap">
+          <h2>Send a Message</h2>
+          <form id="contact-form" class="form-grid-1">
+            <div class="field"><label>Full Name</label><input class="input" name="name" required></div>
+            <div class="field"><label>Contact Number</label><input class="input" name="contact" required></div>
+            <div class="field"><label>Message</label><textarea class="input" name="message" required></textarea><span class="word-count" id="contact-message-count">Limit: 200 words max</span></div>
+            <div><button type="submit" class="btn btn-primary">Send</button></div>
+          </form>
+        </div>
+      </div>
+      <div>
+        <h2>Find Us</h2>
+        <iframe src="https://www.google.com/maps?q=Shell+Residences+Tower+C+Pasay+City&output=embed" width="100%" height="260" style="border:none" loading="lazy"></iframe>
+        <a class="link-italic" href="https://maps.app.goo.gl/dVfGpufQKGo54vK16" target="_blank" rel="noopener" style="display:inline-block;margin-top:12px">View on Google Maps</a>
+        <p class="body-text" style="margin-top:8px">Unit 1451, 14th Floor, Shell Residences Tower C, Pasay City (near MOA)</p>
+      </div>
+    </div>
+
+    <hr class="hr">
+
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+      <details><summary>What are the check-in and check-out times?</summary><p>Check-in is at 2:00 PM and check-out is at 12:00 NN.</p></details>
+      <details><summary>How do I book a stay?</summary><p>Message us on Facebook Messenger or send an inquiry through the Booking or Contact page with your preferred dates and number of guests.</p></details>
+      <details><summary>Is pool access included?</summary><p>Pool access is separate: ₱150 per person on weekdays, ₱300 per person on weekends and holidays.</p></details>
+      <details><summary>How many guests can stay?</summary><p>The unit comfortably fits 1–4 guests. Additional guests are ₱500 per person.</p></details>
+      <details><summary>Where exactly is Casa Haven located?</summary><p>Unit 1451, 14th Floor, Shell Residences Tower C, Pasay City — a short ride from SM Mall of Asia.</p></details>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-cols">
+      <div>
+        <div class="nav-brand" style="margin-bottom:12px">
+          <div class="logo-slot"><img src="assets/ch_logo_v1.webp" alt="Casa Haven logo" class="logo-img"></div>
+        </div>
+        <p class="footer-address">Unit 1451, 14th Floor, Shell Residences Tower C, Pasay City (near MOA)</p>
+      </div>
+      <div>
+        <span class="footer-heading">Contact</span>
+        <div class="footer-links">
+          <a class="link-italic" href="https://m.me/casahaven2026" target="_blank" rel="noopener">Messenger — Casa Haven</a>
+          <span class="footer-fb">Facebook</span>
+          <a href="tel:09471864162">0947 186 4162 (Call / Viber)</a>
+          <a href="mailto:casahaven2026@gmail.com" style="text-decoration:underline">casahaven2026@gmail.com</a>
+        </div>
+      </div>
+      <div>
+        <span class="footer-heading">Quick Links</span>
+        <div class="footer-links">
+          <a href="#" data-nav="booking">Booking</a>
+          <a href="#" data-nav="services">Hotel Services</a>
+          <a href="#" data-nav="contact">Contact</a>
+        </div>
+      </div>
+    </div>
+    <hr class="hr footer-hr">
+    <div class="footer-bottom">
+      <span id="copyright"></span>
+      <span>Relax · Unwind · Make Memories</span>
+    </div>
+  </div>
+</footer>
+
+<button type="button" id="scroll-top" class="scroll-top-btn" aria-label="Back to top">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+</button>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Close image">&times;</button>
+  <img class="lightbox-img" id="lightbox-img" src="" alt="">
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
