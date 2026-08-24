@@ -18,7 +18,7 @@
 
 <nav class="nav">
   <div class="nav-brand" data-nav="home">
-    <div class="logo-slot"><img src="assets/ch_logo_v1.webp" alt="Casa Haven logo" class="logo-img"></div>
+    <div class="logo-slot hero-fade"><img src="assets/ch_logo_v1.webp" alt="Casa Haven logo" class="logo-img"></div>
   </div>
   <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
     <span class="nav-toggle-bar"></span>
@@ -34,15 +34,15 @@
       <button type="button" class="nav-close" id="nav-close" aria-label="Close menu">&times;</button>
     </div>
     <div class="nav-links">
-      <a href="#" data-nav="home">Home</a>
-      <a href="#" data-nav="booking">Booking</a>
-      <a href="#" data-nav="facilities">Facilities</a>
-      <a href="#" data-nav="highlights">Suite</a>
-      <a href="#" data-nav="services">Services</a>
-      <a href="#" data-nav="promos">Promos</a>
-      <a href="#" data-nav="contact">Contact</a>
+      <a href="#" data-nav="home" class="hero-fade">Home</a>
+      <a href="#" data-nav="booking" class="hero-fade">Booking</a>
+      <a href="#" data-nav="facilities" class="hero-fade">Facilities</a>
+      <a href="#" data-nav="highlights" class="hero-fade">Suite</a>
+      <a href="#" data-nav="services" class="hero-fade">Services</a>
+      <a href="#" data-nav="promos" class="hero-fade">Promos</a>
+      <a href="#" data-nav="contact" class="hero-fade">Contact</a>
     </div>
-    <a class="btn-message" href="https://m.me/casahaven2026" target="_blank" rel="noopener">Message Us</a>
+    <a class="btn-message hero-fade" href="https://m.me/casahaven2026" target="_blank" rel="noopener">Message Us</a>
   </div>
 </nav>
 
@@ -50,12 +50,12 @@
 <main data-page="home" class="page">
   <section class="hero">
     <div class="wrap">
-      <span class="eyebrow">Shell Residences Tower C · Pasay, NCR</span>
-      <h1>Your home away from home</h1>
-      <p class="hero-sub">A cozy escape near SM Mall of Asia. Curated stays, relaxing vibes, and a prime location in Pasay City — message us to book your stay</p>
+      <span class="eyebrow hero-fade">Shell Residences Tower C · Pasay, NCR</span>
+      <h1 class="hero-fade">Your home away from home</h1>
+      <p class="hero-sub hero-fade">A cozy escape near SM Mall of Asia. Curated stays, relaxing vibes, and a prime location in Pasay City — message us to book your stay</p>
       <div class="hero-ctas">
-        <button type="button" class="btn-pill" data-goto="booking">Book Your Stay</button>
-        <a class="link-italic-white" href="https://m.me/casahaven2026" target="_blank" rel="noopener">Message Us</a>
+        <button type="button" class="btn-pill hero-fade" data-goto="booking">Book Your Stay</button>
+        <a class="link-italic-white hero-fade" href="https://m.me/casahaven2026" target="_blank" rel="noopener">Message Us</a>
       </div>
     </div>
   </section>
@@ -110,48 +110,62 @@
     <table class="table">
       <thead><tr><th>Guests</th><th>Weekdays (Mon–Thu)</th><th>Weekends (Fri–Sun)</th></tr></thead>
       <tbody>
-        <tr><td>2 Guests</td><td>₱1,900</td><td>₱2,000</td></tr>
-        <tr><td>3–4 Guests</td><td>₱2,400</td><td>₱2,500</td></tr>
+        <tr><td>1-2 Guests</td><td id="rate-guests2-weekday">₱1,900</td><td id="rate-guests2-weekend">₱2,000</td></tr>
+        <tr><td>3–4 Guests</td><td id="rate-guests34-weekday">₱2,400</td><td id="rate-guests34-weekend">₱2,500</td></tr>
       </tbody>
     </table>
-    <p class="fine-print">Additional guest: ₱500 per person.</p>
+    <p class="fine-print">Per guest rate applies on top of the base rate for each guest beyond 2, up to the 4-guest maximum.</p>
 
     <h2>Pool Access</h2>
-    <table class="table mb-lg">
+    <table class="table mb-lg" id="pool-access-table">
       <thead><tr><th>When</th><th>Rate</th></tr></thead>
       <tbody>
-        <tr><td>Weekdays</td><td>₱150 per person</td></tr>
-        <tr><td>Weekends &amp; Holidays</td><td>₱300 per person</td></tr>
+        <tr><td>Weekdays</td><td id="rate-pool-weekday">₱150 per person</td></tr>
+        <tr><td>Weekends &amp; Holidays</td><td id="rate-pool-weekend">₱300 per person</td></tr>
       </tbody>
     </table>
 
-    <h2>July 2026 Availability</h2>
+    <h2>Availability</h2>
+    <div class="calendar-head">
+      <div class="calendar-nav-group">
+        <button type="button" class="calendar-nav-btn" id="calendar-prev" aria-label="Previous month">&lsaquo;</button>
+        <span class="calendar-month-label" id="calendar-month-label"></span>
+        <button type="button" class="calendar-nav-btn" id="calendar-next" aria-label="Next month">&rsaquo;</button>
+      </div>
+      <button type="button" class="calendar-today-btn" id="calendar-today">Today</button>
+    </div>
     <div class="calendar" id="calendar"></div>
     <p class="fine-print mb-lg">All dates shown are currently open. Message us to confirm and lock in your booking.</p>
 
     <hr class="hr">
 
     <div id="booking-form-wrap">
-      <h2>Send a Booking Inquiry</h2>
-      <form id="booking-form" class="form-grid">
-        <div class="field"><label>Full Name</label><input class="input" name="name" required></div>
-        <div class="field"><label>Contact Number</label><input class="input" name="contact" required></div>
-        <div class="form-break"></div>
-        <div class="field"><label>Check-in Date</label><input class="input" type="date" name="checkin"></div>
-        <div class="field"><label>Check-out Date</label><input class="input" type="date" name="checkout"><span class="field-error" id="booking-date-error" hidden>Check-out must be at least one day after check-in.</span></div>
-        <div class="field"><label>Number of Guests</label><input class="input" type="number" min="1" max="4" name="guests" value="2"></div>
-        <div class="field span-all"><label>Message (optional)</label><textarea class="input" name="message"></textarea><span class="word-count" id="booking-message-count">Limit: 200 words max</span></div>
-        <div class="span-all"><button type="submit" class="btn btn-primary">Send Inquiry</button></div>
-      </form>
-    </div>
-    <div id="booking-confirm" class="card elev-sm" style="max-width:750px" hidden>
-      <span class="card-kicker">Inquiry ready</span>
-      <p class="card-title" id="booking-thanks"></p>
-      <p class="card-body">Send us this summary on Messenger and we'll confirm availability:</p>
-      <p class="card-body" id="booking-summary" style="white-space:pre-line;font-weight:600"></p>
-      <div class="btn-row">
-        <a class="btn btn-primary" href="https://m.me/casahaven2026" target="_blank" rel="noopener">Open Messenger</a>
-        <button type="button" class="btn btn-secondary" id="booking-edit">Edit Inquiry</button>
+      <div class="booking-form-layout">
+        <div class="booking-form-main">
+          <h2>Send a Booking Inquiry</h2>
+          <form id="booking-form" class="form-grid">
+            <div class="field"><label>Full Name</label><input class="input" name="name" required></div>
+            <div class="field"><label>Contact Number</label><input class="input" name="contact" required></div>
+            <div class="field"><label>Email Address (optional)</label><input class="input" type="email" name="email"></div>
+            <div class="field"><label>Promo Code (optional)</label><input class="input" name="promoCode"></div>
+            <div class="form-break"></div>
+            <div class="field"><label>Check-in Date</label><input class="input" type="date" name="checkin"></div>
+            <div class="field"><label>Check-out Date</label><input class="input" type="date" name="checkout"><span class="field-error" id="booking-date-error" hidden>Check-out must be at least one day after check-in.</span></div>
+            <div class="field"><label>Number of Guests</label><input class="input" type="number" min="1" max="4" name="guests" value="2"></div>
+            <div class="field span-all"><label>Message (optional)</label><textarea class="input" name="message"></textarea><span class="word-count" id="booking-message-count">Limit: 200 words max</span></div>
+            <div class="span-all"><button type="button" class="btn btn-primary" id="booking-open-tos">Send Inquiry</button></div>
+          </form>
+        </div>
+        <aside class="booking-steps-note">
+          <h3>How booking works</h3>
+          <ol>
+            <li><b>Send your inquiry</b> — your dates and guest count.</li>
+            <li><b>Get a quote</b> — we will send an email with pricing and a GCash QR code; your dates are softly held for 24 hours.</li>
+            <li><b>Pay to confirm</b> — reply to the email with your full payment or 50% downpayment, and reference number of receipt.</li>
+            <li><b>You're booked</b> — we verify the payment and your dates are locked in.</li>
+          </ol>
+          <p class="fine-print">No payment within 24 hours automatically releases the hold.</p>
+        </aside>
       </div>
     </div>
   </div>
@@ -167,8 +181,9 @@
       <div class="numbered-row"><p class="num">02</p><div><h3 class="page-fade">Fast WiFi &amp; Netflix</h3><p class="body-text page-fade">Stay connected and entertained with reliable high-speed internet throughout the unit.</p></div></div>
       <div class="numbered-row"><p class="num">03</p><div><h3 class="page-fade">Air-Conditioned Comfort</h3><p class="body-text page-fade">A cool, comfortable space no matter the weather outside.</p></div></div>
       <div class="numbered-row"><p class="num">04</p><div><h3 class="page-fade">Fully Equipped Kitchen</h3><p class="body-text page-fade">Cook your own meals with a stocked kitchen — great for longer stays.</p></div></div>
-      <div class="numbered-row"><p class="num">05</p><div><h3 class="page-fade">24/7 Security &amp; Elevator Access</h3><p class="body-text page-fade">Round-the-clock building security and direct elevator access to your floor.</p></div></div>
+      <div class="numbered-row"><p class="num">05</p><div><h3 class="page-fade">24/7 Security &amp; Elevator Access</h3><p class="body-text page-fade">24/7 building security and direct elevator access, plus keyless entry to your floor and unit.</p></div></div>
       <div class="numbered-row"><p class="num">06</p><div><h3 class="page-fade">Prime Location</h3><p class="body-text page-fade">Minutes from SM Mall of Asia and the rest of the Bay Area.</p></div></div>
+      <div class="numbered-row"><p class="num">07</p><div><h3 class="page-fade">Smart Door Lock</h3><p class="body-text page-fade">Keyless and secure.</p></div></div>
     </div>
   </div>
 </section>
@@ -176,9 +191,9 @@
 <!-- SUITE HIGHLIGHTS -->
 <section data-page="highlights" class="page" hidden>
   <div class="wrap">
-    <span class="label-strong">Suite Highlights</span>
-    <h1 class="page-title">Cozy, comfortable, convenient</h1>
-    <div class="tag-row">
+    <span class="label-strong fade-in">Suite Highlights</span>
+    <h1 class="page-title fade-in">Cozy, comfortable, convenient</h1>
+    <div class="tag-row fade-in">
       <span class="tag tag-outline">Good for 1–4 Pax</span>
       <span class="tag tag-outline">Balcony City View</span>
       <span class="tag tag-outline">Netflix + Fast WiFi</span>
@@ -186,13 +201,7 @@
       <span class="tag tag-outline">Short &amp; Long Stay</span>
       <span class="tag tag-outline">Open for Walk-ins</span>
     </div>
-    <div class="reviews-carousel">
-      <button type="button" class="review-nav review-nav-prev" id="suite-photo-prev" aria-label="Previous photo">&lsaquo;</button>
-      <div class="reviews-viewport">
-        <div class="suite-photos-grid" id="suite-photos-grid"></div>
-      </div>
-      <button type="button" class="review-nav review-nav-next" id="suite-photo-next" aria-label="Next photo">&rsaquo;</button>
-    </div>
+    <div class="suite-photos-grid" id="suite-photos-grid"></div>
   </div>
 </section>
 
@@ -209,14 +218,7 @@
       <div class="numbered-row"><p class="num">05</p><div><h3 class="page-fade">Landscaped Grounds &amp; Gazebos</h3><p class="body-text page-fade">Palm-lined walkways and shaded gazebos for relaxing outside the unit.</p></div></div>
       <div class="numbered-row"><p class="num">06</p><div><h3 class="page-fade">Elegant Lobby &amp; Reception</h3><p class="body-text page-fade">A well-appointed lobby and reception area for guests and visitors.</p></div></div>
     </div>
-    <div class="photo-grid photo-grid-6">
-      <div class="photo-block page-fade">Photo — Pool (Day)</div>
-      <div class="photo-block page-fade">Photo — Pool (Night)</div>
-      <div class="photo-block page-fade">Photo — Lobby</div>
-      <div class="photo-block page-fade">Photo — Reception Lounge</div>
-      <div class="photo-block page-fade">Photo — Kids' Playground</div>
-      <div class="photo-block page-fade">Photo — Splash Pad</div>
-    </div>
+    <div class="suite-photos-grid" id="services-photos-grid"></div>
   </div>
 </section>
 
@@ -225,11 +227,7 @@
   <div class="wrap">
     <span class="label-strong">Promos &amp; Offers</span>
     <h1 class="page-title">Nothing live right now</h1>
-    <div class="card" style="max-width:640px">
-      <p class="card-body">Our last promo has ended — thank you to everyone who took advantage of it. We appreciate your support.</p>
-      <p class="card-body">Stay tuned for our next exclusive offer. Follow our Facebook page or message us to be the first to know.</p>
-      <a class="btn btn-primary" style="margin-top:8px" href="https://m.me/casahaven2026" target="_blank" rel="noopener">Message Us</a>
-    </div>
+    <p>Our last promo has ended — thank you to everyone who took advantage of it. We appreciate your support. Stay tuned for our next exclusive offer. Follow our Facebook page or message us to be the first to know.</p>
   </div>
 </section>
 
@@ -272,7 +270,7 @@
       <details><summary>What are the check-in and check-out times?</summary><p>Check-in is at 2:00 PM and check-out is at 12:00 NN.</p></details>
       <details><summary>How do I book a stay?</summary><p>Message us on Facebook Messenger or send an inquiry through the Booking or Contact page with your preferred dates and number of guests.</p></details>
       <details><summary>Is pool access included?</summary><p>Pool access is separate: ₱150 per person on weekdays, ₱300 per person on weekends and holidays.</p></details>
-      <details><summary>How many guests can stay?</summary><p>The unit comfortably fits 1–4 guests. Additional guests are ₱500 per person.</p></details>
+      <details><summary>How many guests can stay?</summary><p>The unit comfortably fits 1–4 guests.</p></details>
       <details><summary>Where exactly is Casa Haven located?</summary><p>Unit 1451, 14th Floor, Shell Residences Tower C, Pasay City — a short ride from SM Mall of Asia.</p></details>
     </div>
   </div>
@@ -319,9 +317,56 @@
 
 <div class="lightbox" id="lightbox" aria-hidden="true">
   <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Close image">&times;</button>
+  <button type="button" class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="Previous photo">&lsaquo;</button>
   <img class="lightbox-img" id="lightbox-img" src="" alt="">
+  <button type="button" class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="Next photo">&rsaquo;</button>
+  <p class="lightbox-caption" id="lightbox-caption"></p>
 </div>
 
-<script src="script.js"></script>
+<div class="tos-modal" id="tos-modal" aria-hidden="true">
+  <div class="tos-modal-panel" role="dialog" aria-modal="true" aria-labelledby="tos-modal-title">
+    <button type="button" class="tos-modal-close" id="tos-modal-close" aria-label="Close">&times;</button>
+    <h2 id="tos-modal-title">🏡 Casa Haven – Booking Terms &amp; Conditions</h2>
+    <div class="tos-modal-body">
+      <p>To secure and confirm your preferred dates, please take note of the following:</p>
+
+      <h3>💳 Reservation &amp; Payment</h3>
+      <ul>
+        <li>A minimum 50% downpayment is required to reserve and hold the selected dates.</li>
+        <li>The remaining balance must be paid before or upon check-in, as agreed with Casa Haven.</li>
+        <li>A booking is considered confirmed only after the required downpayment has been received and verified.</li>
+      </ul>
+
+      <h3>📅 Date Reservation</h3>
+      <ul>
+        <li>Once payment has been received, the selected dates will be reserved exclusively for the guest.</li>
+        <li>Casa Haven may release unpaid or partially secured reservations if the required payment is not received within the agreed timeframe.</li>
+      </ul>
+
+      <h3>❌ Cancellation &amp; Refund Policy</h3>
+      <ul>
+        <li>The downpayment is non-refundable once the booking has been confirmed.</li>
+        <li>If the guest cancels the reservation, the downpayment will not be refunded.</li>
+        <li>Date changes may be considered depending on availability and must be requested in advance.</li>
+        <li>Any approved date change may be subject to applicable rate differences.</li>
+      </ul>
+
+      <h3>⚠️ Important</h3>
+      <ul>
+        <li>Please make sure that your selected dates and number of guests are correct before making the payment.</li>
+        <li>Payments made to secure a reservation are considered an agreement to these booking terms.</li>
+      </ul>
+
+      <p>🤍 Thank you for choosing Casa Haven. We appreciate your understanding and look forward to hosting you!</p>
+    </div>
+    <label class="tos-modal-agree">
+      <input type="checkbox" id="tos-agree-checkbox">
+      I have read and agree to the Booking Terms &amp; Conditions.
+    </label>
+    <button type="button" class="btn btn-primary" id="tos-confirm-btn" disabled>Send Inquiry</button>
+  </div>
+</div>
+
+<script type="module" src="script.js"></script>
 </body>
 </html>

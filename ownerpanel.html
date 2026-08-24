@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Casa Haven — Owner Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-role="owner">
+
+<section id="admin-console" class="admin-console" aria-label="Casa Haven owner console">
+  <header class="admin-topbar" hidden>
+    <div class="admin-brand"><strong>Casa Haven</strong><span id="admin-role-label">Owner console</span></div>
+    <div class="admin-account"><span id="admin-avatar">MA</span><span><b id="admin-name">Marikit Alvarez</b><small id="admin-role">Owner</small></span></div>
+  </header>
+  <div class="admin-shell" hidden>
+    <nav class="admin-side" aria-label="Private console navigation">
+      <div class="admin-group"><small>Review queue</small><button type="button" class="active" data-admin-go="approvals">Approvals</button></div>
+      <div class="admin-group"><small>Monitoring</small><button type="button" data-admin-go="inbox">Booking inquiries <b>2</b></button><button type="button" data-admin-go="calendar">Availability</button></div>
+      <div class="admin-group"><small>Configuration</small><button type="button" data-admin-go="promos">Promos</button><button type="button" data-admin-go="rates">Rates &amp; rules</button></div>
+      <div class="admin-group admin-side-signout"><button type="button" data-admin-signout>Sign out</button></div>
+    </nav>
+    <main class="admin-main">
+      <section class="admin-page active" data-admin-page="approvals">
+        <div class="admin-approvals-grid">
+          <div class="admin-approvals-main">
+            <span class="admin-eyebrow">Review queue</span><h1>Approvals</h1><p class="admin-lede">Nothing reaches the homepage without passing through here. Review staff proposals before they go live.</p>
+            <article class="admin-diff" data-approval>
+              <div class="admin-diff-head"><div><h2>Long Weekend Rate</h2><small>Homepage banner · submitted by Liza Ramos · 17 Aug, 09:14</small></div><span class="admin-tag waiting">Waiting on you</span></div>
+              <div class="admin-diff-grid"><div><b class="admin-col live">Live on the site now</b><dl><dt>Discount</dt><dd>10% off weekend nights</dd><dt>Runs</dt><dd>01 Aug – 31 Aug 2026</dd><dt>Slot cap</dt><dd>Unlimited</dd><dt>Minimum stay</dt><dd>2 nights</dd></dl></div><div class="proposed"><b class="admin-col proposed-label">Proposed change</b><dl><dt>Discount</dt><dd>20% off weekend nights</dd><dt>Runs</dt><dd>28 Aug – 21 Sep 2026</dd><dt>Slot cap</dt><dd>20 bookings</dd><dt>Minimum stay</dt><dd>2 nights</dd></dl></div></div>
+              <div class="admin-actions"><button type="button" class="admin-btn secondary" data-approval-action="sent back">Send back</button><button type="button" class="admin-btn brass" data-approval-action="published">Approve &amp; publish</button></div>
+            </article>
+            <article class="admin-diff" data-approval><div class="admin-diff-head"><div><h2>Ber Months Kickoff</h2><small>New promo · submitted by Aljon Mercado · 18 Aug, 16:40</small></div><span class="admin-tag waiting">Waiting on you</span></div><div class="admin-proposal"><b>15% off weekday nights</b><span>01 Sep – 30 Sep 2026 · 2-night minimum · unlimited slots</span></div><div class="admin-actions"><button type="button" class="admin-btn secondary" data-approval-action="sent back">Send back</button><button type="button" class="admin-btn brass" data-approval-action="published">Approve &amp; publish</button></div></article>
+          </div>
+          <div class="admin-approvals-side">
+            <section class="admin-side-block">
+              <span class="admin-eyebrow">Monitoring</span><h2>Activity log</h2><p class="admin-lede">Every change anyone made, in order.</p>
+              <div class="admin-card"><ul class="admin-log" id="admin-log"><li><time>18 Aug · 16:40</time><span><b>Aljon Mercado</b> submitted <em>Ber Months Kickoff</em> for approval</span></li><li><time>18 Aug · 14:02</time><span><b>Liza Ramos</b> closed <em>12–14 Sep</em> for a held booking</span></li><li><time>17 Aug · 09:14</time><span><b>Liza Ramos</b> submitted <em>Long Weekend Rate</em> for approval</span></li></ul></div>
+            </section>
+            <section class="admin-side-block">
+              <span class="admin-eyebrow">Configuration</span><h2>Staff accounts</h2><p class="admin-lede">Only people registered here can sign in to the staff console. "Remove access" revokes their console access — it doesn't delete their underlying login.</p>
+              <div class="admin-card admin-table">
+                <div id="admin-staff-list"></div>
+                <div class="admin-staff-invite"><b>Register staff account</b><span>New accounts are always staff-level. Set a temporary password — they can change it after signing in.</span><label><input id="admin-staff-name" type="text" placeholder="Full name" aria-label="Staff name"></label><label><input id="admin-staff-email" type="email" placeholder="name@casahaven.ph" aria-label="Staff email"></label><label><input id="admin-staff-password" type="password" placeholder="Temporary password" aria-label="Temporary password"><button type="button" class="admin-btn dark" id="admin-register-staff">Register account</button></label></div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+      <section class="admin-page" data-admin-page="inbox" hidden>
+        <span class="admin-eyebrow">Operations</span><h1>Booking inquiries</h1><p class="admin-lede">Answer guests, hold dates, and keep requests from going stale.</p>
+        <div class="admin-tabs" role="tablist">
+          <button type="button" class="admin-tab active" data-inquiry-tab="all" aria-pressed="true">Pending</button>
+          <button type="button" class="admin-tab" data-inquiry-tab="pending" aria-pressed="false">Hold</button>
+          <button type="button" class="admin-tab" data-inquiry-tab="hold" aria-pressed="false">Booked</button>
+        </div>
+        <div class="admin-record" data-inquiry-status="pending"><div><h2>Marielle Santos</h2><small>12–14 SEP 2026 · 4 guests · 0917 442 8810</small></div><p>Planning a small birthday for my mom. Is the pool heated, and can we bring a caterer?</p><small>Quote: 2 weekend nights × ₱2,500 = <b>₱5,000</b></small><div class="admin-actions"><button type="button" class="admin-btn dark" data-admin-toast="Dates held and removed from the live calendar.">Hold Dates</button><button type="button" class="admin-btn secondary" data-admin-toast="Reply drafted to Marielle Santos.">Reply</button><button type="button" class="admin-btn brass" data-admin-toast="Booking confirmed for Marielle Santos.">Book</button><button type="button" class="admin-btn danger" data-admin-toast="Inquiry declined.">Decline</button></div></div>
+        <div class="admin-record" data-inquiry-status="pending"><div><h2>Carlo Dizon</h2><small>05–06 SEP 2026 · 3 guests · 0917 220 4471</small></div><p>Hoping to celebrate a small reunion — is early check-in around 12 NN possible?</p><small>Quote: 1 weekend night × ₱2,500 = <b>₱2,500</b></small><div class="admin-actions"><button type="button" class="admin-btn dark" data-admin-toast="Dates held and removed from the live calendar.">Hold Dates</button><button type="button" class="admin-btn secondary" data-admin-toast="Reply drafted to Carlo Dizon.">Reply</button><button type="button" class="admin-btn brass" data-admin-toast="Booking confirmed for Carlo Dizon.">Book</button><button type="button" class="admin-btn danger" data-admin-toast="Inquiry declined.">Decline</button></div></div>
+      </section>
+      <section class="admin-page" data-admin-page="calendar" hidden>
+        <span class="admin-eyebrow">Monitoring</span><h1>Availability</h1><p class="admin-lede">Tap an open date to close it, or reopen a closed date. Confirmed bookings remain locked.</p>
+        <div class="admin-calendar-grid">
+          <div class="admin-card admin-calendar-card">
+            <div class="admin-calendar-head">
+              <div class="admin-calendar-nav">
+                <button type="button" class="admin-btn secondary" data-calendar-shift="-1">←</button>
+                <h2 id="admin-month">September 2026</h2>
+                <button type="button" class="admin-btn secondary" data-calendar-shift="1">→</button>
+              </div>
+              <button type="button" class="admin-btn secondary" data-calendar-today>Today</button>
+            </div>
+            <div class="admin-calendar-weekdays"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+            <div class="admin-calendar" id="admin-calendar"></div>
+            <div class="admin-calendar-select-bar" id="admin-calendar-select-bar">
+              <div class="admin-calendar-range-picker">
+                <label class="admin-calendar-range-field">Start Date<input type="date" id="admin-calendar-range-start"></label>
+                <label class="admin-calendar-range-field">End Date<input type="date" id="admin-calendar-range-end"></label>
+              </div>
+              <div class="admin-calendar-select-summary" id="admin-calendar-select-summary">
+                <div class="admin-calendar-select-actions">
+                  <select id="admin-calendar-status-select" class="admin-calendar-status-select" aria-label="Set status for selected dates">
+                    <option value="" selected disabled>Set status…</option>
+                    <option value="open">⚪ Mark open</option>
+                    <option value="booked">🟢 Mark booked</option>
+                    <option value="closed">🟠 Mark closed / under maintenance</option>
+                  </select>
+                  <button type="button" class="admin-btn secondary" data-clear-selection>Clear Selection</button>
+                </div>
+              </div>
+            </div>
+            <p class="admin-calendar-summary" id="admin-calendar-summary"></p>
+          </div>
+          <div class="admin-calendar-side">
+            <div class="admin-card admin-legend">
+              <h2>Legend</h2>
+              <ul class="admin-legend-list">
+                <li><span class="admin-legend-swatch"></span>Open for booking</li>
+                <li><span class="admin-legend-swatch is-booked"></span>Booked — guest confirmed</li>
+                <li><span class="admin-legend-swatch is-closed"></span>Closed — held or maintenance</li>
+                <li><span class="admin-legend-swatch is-past"></span>Past — locked, no edits</li>
+              </ul>
+            </div>
+            <div class="admin-card admin-legend-note">
+              <h2>Your override</h2>
+              <p class="admin-lede">Staff close dates without asking, because a held date has to leave the site immediately. If one was closed by mistake, reopen it here and check the activity log to see who closed it and when.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="admin-page" data-admin-page="promos" hidden>
+        <span class="admin-eyebrow">Configuration</span><h1>Promos</h1>
+        <p class="admin-lede">Owner changes publish immediately. Staff drafts go to the approval queue.</p>
+        <div class="admin-card admin-form admin-promo-form">
+          <label>Promo name<input value="Ber Months Kickoff"></label>
+          <label>Discount<input value="15% off weekday nights"></label>
+          <label>Promo code<input value="BERMONTHS26" aria-describedby="admin-promo-code-hint"><small id="admin-promo-code-hint" class="admin-promo-code-hint">What guests type in at booking to redeem this promo. Case-insensitive.</small></label>
+          <div class="admin-promo-end-field">
+            <span class="admin-eyebrow">How this promo ends</span>
+            <div class="admin-tabs" role="tablist">
+              <button type="button" class="admin-tab active" data-promo-end="date" aria-pressed="true">On a date</button>
+              <button type="button" class="admin-tab" data-promo-end="slots" aria-pressed="false">After X bookings</button>
+              <button type="button" class="admin-tab" data-promo-end="both" aria-pressed="false">Both</button>
+            </div>
+            <div class="admin-promo-end-panel">
+              <div class="admin-form-row" data-promo-show="date,both">
+                <label>Starts<input id="admin-promo-starts" value="01 Sep 2026"></label>
+                <label>Ends<input id="admin-promo-ends" value="30 Sep 2026"></label>
+              </div>
+              <label data-promo-show="slots,both" hidden>Slot cap<input id="admin-promo-slots" value="20 bookings"></label>
+              <p class="admin-promo-end-warning" data-promo-show="both" hidden>Whichever limit is reached first ends the promo. If all slots go before <b>30 Sep 2026</b>, it comes off the site that day even though the end date is later.</p>
+              <p class="admin-promo-end-note" data-promo-show="date">Ends <b>30 Sep 2026</b>. Comes off the homepage on its own — no approval needed to expire.</p>
+              <p class="admin-promo-end-note" data-promo-show="slots" hidden>Ends automatically once <b>20 bookings</b> are made. Comes off the homepage on its own — no approval needed to expire.</p>
+              <p class="admin-promo-end-note" data-promo-show="both" hidden>Ends <b>30 Sep 2026</b>, or sooner if the slot cap fills first. Comes off the homepage on its own — no approval needed to expire.</p>
+            </div>
+          </div>
+          <label>Homepage banner text<textarea>Beat the holiday rush. 15% off Monday–Thursday stays all September, minimum 2 nights.</textarea></label>
+          <div class="admin-promo-footer">
+            <p class="admin-lede">Publishing updates the homepage banner immediately.</p>
+            <div class="admin-promo-footer-actions">
+              <button type="button" class="admin-btn secondary" data-admin-toast="Promo draft saved.">Save draft</button>
+              <button type="button" class="admin-btn brass" data-admin-toast="Promo published to the site.">Publish to the site</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="admin-page" data-admin-page="rates" hidden>
+        <div class="admin-rates-owner">
+          <span class="admin-eyebrow">Configuration</span><h1>Rates &amp; rules</h1>
+          <p class="admin-lede">Base pricing and stay rules. Staff can read these to quote guests but can't change them, and there's no approval step — you are the approval step.</p>
+
+          <div class="admin-card admin-rates-card">
+            <span class="admin-eyebrow">Nightly rate · the unit</span>
+            <div class="admin-rates-row admin-rates-row-head">
+              <span>Guests</span>
+              <div class="admin-rates-values"><span>Weekdays<br>Mon–Thu</span><span>Weekends<br>Fri–Sun</span></div>
+            </div>
+            <div class="admin-rates-row">
+              <b>1–2 guests</b>
+              <div class="admin-rates-values"><input type="text" id="admin-rate-guests2-weekday" value="1,900" aria-label="2 guests, weekday nightly rate"><input type="text" id="admin-rate-guests2-weekend" value="2,000" aria-label="2 guests, weekend nightly rate"></div>
+            </div>
+            <div class="admin-rates-row">
+              <b>3–4 guests</b>
+              <div class="admin-rates-values"><input type="text" id="admin-rate-guests34-weekday" value="2,400" aria-label="3-4 guests, weekday nightly rate"><input type="text" id="admin-rate-guests34-weekend" value="2,500" aria-label="3-4 guests, weekend nightly rate"></div>
+            </div>
+          </div>
+
+          <div class="admin-card admin-rates-card">
+            <span class="admin-eyebrow">Pool access · charged per person</span>
+            <div class="admin-rates-row admin-rates-row-head">
+              <span>When</span>
+              <div class="admin-rates-values"><span>Per person</span></div>
+            </div>
+            <div class="admin-rates-row">
+              <b>Weekdays</b>
+              <div class="admin-rates-values"><input type="text" id="admin-rate-pool-weekday" value="150" aria-label="Pool access, weekday rate per person"></div>
+            </div>
+            <div class="admin-rates-row">
+              <b>Weekends &amp; holidays</b>
+              <div class="admin-rates-values"><input type="text" id="admin-rate-pool-weekend" value="300" aria-label="Pool access, weekend and holiday rate per person"></div>
+            </div>
+          </div>
+
+          <div class="admin-card admin-rates-card">
+            <span class="admin-eyebrow">House rules</span>
+            <div class="admin-rates-row">
+              <div><b>Maximum guests</b><small>Raising this needs a matching rate tier first.</small></div>
+              <div class="admin-rates-values"><input type="text" id="admin-rate-max-guests" value="4" aria-label="Maximum guests"></div>
+            </div>
+            <div class="admin-rates-row">
+              <b>Downpayment for soft hold (%)</b>
+              <div class="admin-rates-values"><input type="text" id="admin-rate-downpayment" value="50" aria-label="Downpayment required to hold a date"></div>
+            </div>
+          </div>
+
+          <div class="admin-rates-footer">
+            <p class="admin-lede">Changes here apply to the site right away and update what staff see.</p>
+            <button type="button" class="admin-btn dark" id="admin-rates-save">Save changes</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="admin-toast" id="admin-toast" role="status" aria-live="polite"></div>
+</section>
+
+<script type="module" src="admin-panel.js"></script>
+</body>
+</html>

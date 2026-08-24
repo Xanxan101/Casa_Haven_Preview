@@ -1,4 +1,7 @@
-// Casa Haven — static export logic
+﻿// Casa Haven — static export logic
+import { fetchAvailabilityMap, dateKey } from './availability.js';
+import { fetchRates, formatPeso } from './rates.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   const pages = document.querySelectorAll('.page[data-page]');
   const navLinks = document.querySelectorAll('a[data-nav]');
@@ -14,8 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   window.addEventListener('resize', syncHeroBgStage);
 
-  // Promos page — stretch the section so a short "no promos" state still
-  // pushes the footer down to the bottom of the viewport (desktop only).
   const promosSection = document.querySelector('[data-page="promos"]');
   const footerEl = document.querySelector('.site-footer');
   function syncPromosHeight() {
@@ -24,15 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
       promosSection.style.minHeight = '';
       return;
     }
-    // Reset first so a previously-set min-height can't itself skew the
-    // nav/footer measurements below (e.g. via scrollbar width changes).
     promosSection.style.minHeight = '';
     const available = window.innerHeight - navEl.offsetHeight - footerEl.offsetHeight;
     promosSection.style.minHeight = available > 0 ? `${available}px` : '';
   }
   window.addEventListener('resize', syncPromosHeight);
-  // Nav/footer height can shift after web fonts swap in or content wraps
-  // differently — keep the promos section in sync whenever that happens.
   if (window.ResizeObserver) {
     const promosResizeObserver = new ResizeObserver(syncPromosHeight);
     if (navEl) promosResizeObserver.observe(navEl);
@@ -42,12 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.fonts.ready.then(syncPromosHeight);
   }
 
-  // Facilities & Services pages — fade up all content once, the first time each page is opened
   const pageFadePlayed = {};
   function playPageFade(page) {
     if (pageFadePlayed[page]) return;
     pageFadePlayed[page] = true;
-    const fadeEls = document.querySelectorAll(`[data-page="${page}"] .page-fade`);
+    const fadeEls = document.querySelectorAll(`[data-page="${page}"] .page-fade, [data-page="${page}"] .fade-in`);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         fadeEls.forEach((el, i) => {
@@ -58,14 +54,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function goTo(page) {
+  // Keeps the current page in the URL hash (#booking, #facilities, ...) so a
+  // refresh reopens the same page instead of always bouncing back to home.
+  const validPages = new Set(Array.from(pages).map(p => p.dataset.page));
+
+  function goTo(page, { updateHash = true } = {}) {
     pages.forEach(p => p.hidden = p.dataset.page !== page);
     navLinks.forEach(a => a.classList.toggle('active', a.dataset.nav === page));
     if (heroBgStage) heroBgStage.classList.toggle('visible', page === 'home');
     if (page === 'home') syncHeroBgStage();
     if (page === 'promos') syncPromosHeight();
-    if (page === 'facilities' || page === 'services') playPageFade(page);
-    if (page === 'highlights' && refreshSuitePhotosCarousel) refreshSuitePhotosCarousel();
+    if (page === 'facilities' || page === 'services' || page === 'highlights') playPageFade(page);
+    if (updateHash) {
+      const url = page === 'home' ? `${location.pathname}${location.search}` : `${location.pathname}${location.search}#${page}`;
+      history.replaceState(null, '', url);
+    }
     window.scrollTo(0, 0);
   }
 
@@ -75,7 +78,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }));
   document.querySelectorAll('[data-goto]').forEach(el => el.addEventListener('click', () => goTo(el.dataset.goto)));
 
-  goTo('home');
+  const hashPage = location.hash.slice(1);
+  goTo(validPages.has(hashPage) ? hashPage : 'home', { updateHash: false });
+
+  // Nav + hero entrance fade-in, plays once on first load
+  const heroFadeEls = document.querySelectorAll('.hero-fade');
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      heroFadeEls.forEach((el, i) => {
+        el.style.transitionDelay = `${i * 70}ms`;
+        el.classList.add('is-visible');
+      });
+    });
+  });
 
   // Navigation drawer (mobile / tablet)
   const navToggle = document.getElementById('nav-toggle');
@@ -163,23 +178,70 @@ document.addEventListener('DOMContentLoaded', () => {
     setActiveReview(reviewIndex);
   }
 
-  // Suite photos carousel — same sliding-track technique as the guest reviews carousel
-  const suitePhotoCount = 14;
-  const suitePhotosGrid = document.getElementById('suite-photos-grid');
-  if (suitePhotosGrid) {
-    suitePhotosGrid.innerHTML = Array.from({ length: suitePhotoCount }, (_, i) => i + 1).map(n => `
-      <div class="suite-photo-card">
-        <img src="assets/s${n}.webp" alt="Casa Haven suite photo ${n}" loading="lazy">
+  // Photo category cards — image + label/arrow footer; click opens the
+  // lightbox scoped to that category's photos, navigable left/right.
+  // Shared by the Suite page and the Services page photo grids.
+  const suiteCategories = [
+    { name: 'Entryway', images: ['s12.webp'] },
+    { name: 'Living Area', images: ['s13.webp', 's14.webp'] },
+    { name: 'Dining Nook', images: ['s1.webp'] },
+    { name: 'Kitchen', images: ['s6.webp', 's9.webp'] },
+    { name: 'Bedroom', images: ['s11.webp', 's2.webp', 's10.webp'] },
+    { name: 'Bathroom', images: ['s5.webp', 's7.webp'] },
+    { name: 'Balcony View', images: ['s3.webp', 's4.webp', 's8.webp'] },
+  ];
+  const servicesCategories = [
+    { name: 'Pool Area', images: ['pool_area_1.webp', 'pool_area_2.webp', 'pool_area_3.webp'] },
+    { name: 'Reception Lounge', images: ['reception_lounge_1.webp', 'reception_lounge_2.webp'] },
+  ];
+
+  function renderPhotoCategoryGrid(gridEl, categories, altPrefix, fadeClass) {
+    if (!gridEl) return;
+    gridEl.innerHTML = categories.map(({ name, images }, i) => `
+      <div class="suite-photo-card ${fadeClass}" data-category-index="${i}">
+        <div class="suite-photo-card-image"><img src="assets/${images[0]}" alt="${altPrefix} — ${name}" loading="lazy"></div>
+        <div class="suite-photo-card-footer">
+          <span class="suite-photo-card-label">${name}</span>
+          <span class="suite-photo-card-arrow" aria-hidden="true">&rarr;</span>
+        </div>
       </div>`).join('');
+    gridEl.addEventListener('click', (e) => {
+      const card = e.target.closest('.suite-photo-card');
+      if (!card) return;
+      const category = categories[Number(card.dataset.categoryIndex)];
+      if (category) openLightbox(category.images, category.name);
+    });
   }
-  // Suite photos — click any card to view it larger/uncropped in a lightbox
+
+  // Lightbox — enlarges the clicked category's photos with prev/next navigation
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightbox-img');
   const lightboxClose = document.getElementById('lightbox-close');
-  function openLightbox(src, alt) {
+  const lightboxPrev = document.getElementById('lightbox-prev');
+  const lightboxNext = document.getElementById('lightbox-next');
+  const lightboxCaption = document.getElementById('lightbox-caption');
+  let lightboxImages = [];
+  let lightboxName = '';
+  let lightboxIndex = 0;
+
+  function renderLightboxImage() {
+    lightboxImg.src = `assets/${lightboxImages[lightboxIndex]}`;
+    lightboxImg.alt = lightboxName;
+    if (lightboxCaption) {
+      lightboxCaption.textContent = lightboxImages.length > 1
+        ? `${lightboxName} — ${lightboxIndex + 1}/${lightboxImages.length}`
+        : lightboxName;
+    }
+    const multiple = lightboxImages.length > 1;
+    if (lightboxPrev) lightboxPrev.hidden = !multiple;
+    if (lightboxNext) lightboxNext.hidden = !multiple;
+  }
+  function openLightbox(images, name) {
     if (!lightbox || !lightboxImg) return;
-    lightboxImg.src = src;
-    lightboxImg.alt = alt || '';
+    lightboxImages = images;
+    lightboxName = name;
+    lightboxIndex = 0;
+    renderLightboxImage();
     lightbox.classList.add('open');
     lightbox.setAttribute('aria-hidden', 'false');
     document.body.classList.add('no-scroll');
@@ -190,13 +252,18 @@ document.addEventListener('DOMContentLoaded', () => {
     lightbox.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('no-scroll');
   }
-  if (suitePhotosGrid) {
-    suitePhotosGrid.addEventListener('click', (e) => {
-      const img = e.target.closest('.suite-photo-card img');
-      if (img) openLightbox(img.src, img.alt);
-    });
+  function stepLightbox(delta) {
+    if (!lightboxImages.length) return;
+    lightboxIndex = (lightboxIndex + delta + lightboxImages.length) % lightboxImages.length;
+    renderLightboxImage();
   }
+
+  renderPhotoCategoryGrid(document.getElementById('suite-photos-grid'), suiteCategories, 'Casa Haven suite', 'fade-in');
+  renderPhotoCategoryGrid(document.getElementById('services-photos-grid'), servicesCategories, 'Casa Haven', 'page-fade');
+
   if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+  if (lightboxPrev) lightboxPrev.addEventListener('click', (e) => { e.stopPropagation(); stepLightbox(-1); });
+  if (lightboxNext) lightboxNext.addEventListener('click', (e) => { e.stopPropagation(); stepLightbox(1); });
   if (lightbox) {
     lightbox.addEventListener('click', (e) => {
       if (e.target === lightbox) closeLightbox();
@@ -204,62 +271,98 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeLightbox();
+    if (!lightbox || !lightbox.classList.contains('open')) return;
+    if (e.key === 'ArrowLeft') stepLightbox(-1);
+    if (e.key === 'ArrowRight') stepLightbox(1);
   });
 
-  const suitePhotosCarousel = suitePhotosGrid ? suitePhotosGrid.closest('.reviews-carousel') : null;
-  const suitePhotoPrevBtn = document.getElementById('suite-photo-prev');
-  const suitePhotoNextBtn = document.getElementById('suite-photo-next');
-  // Assigned below when the carousel initializes — the highlights page starts
-  // `hidden`, so widths measured at init time are 0 and must be re-synced
-  // once the page is actually shown (see goTo()).
-  let refreshSuitePhotosCarousel = null;
-
-  if (suitePhotosGrid && suitePhotosCarousel && suitePhotoCount) {
-    const suitePhotoCards = suitePhotosGrid.querySelectorAll('.suite-photo-card');
-    const N = suitePhotoCount;
-    let suitePhotoIndex = 0;
-    const isDesktopSuiteCarousel = () => window.matchMedia('(min-width: 1025px)').matches;
-
-    const updateSuitePhotosCarousel = () => {
-      suitePhotoCards.forEach((card, i) => card.classList.toggle('active', i === suitePhotoIndex));
-      if (!isDesktopSuiteCarousel()) {
-        suitePhotosGrid.style.transform = '';
-        return;
-      }
-      const card = suitePhotoCards[suitePhotoIndex];
-      const gap = parseFloat(getComputedStyle(suitePhotosGrid).columnGap) || 0;
-      const slotWidth = card.offsetWidth + gap;
-      const offset = (suitePhotosCarousel.offsetWidth / 2) - (card.offsetWidth / 2) - (suitePhotoIndex * slotWidth);
-      suitePhotosGrid.style.transform = `translateX(${offset}px)`;
-    };
-
-    const setActiveSuitePhoto = (index) => {
-      suitePhotoIndex = (index + N) % N;
-      updateSuitePhotosCarousel();
-    };
-
-    if (suitePhotoPrevBtn) suitePhotoPrevBtn.addEventListener('click', () => setActiveSuitePhoto(suitePhotoIndex - 1));
-    if (suitePhotoNextBtn) suitePhotoNextBtn.addEventListener('click', () => setActiveSuitePhoto(suitePhotoIndex + 1));
-    window.addEventListener('resize', updateSuitePhotosCarousel);
-
-    refreshSuitePhotosCarousel = updateSuitePhotosCarousel;
-    setActiveSuitePhoto(suitePhotoIndex);
-  }
-
-  // Calendar — July 2026
+  // Calendar — navigable across a 3-month window (the listing month + 2 ahead)
   const calendar = document.getElementById('calendar');
   if (calendar) {
     const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const year = 2026, month = 6; // July
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const firstWeekday = new Date(year, month, 1).getDay();
-    let html = weekdayLabels.map(l => `<div class="cal-label">${l}</div>`).join('');
-    for (let i = 0; i < firstWeekday; i++) html += `<div class="cal-cell"></div>`;
-    for (let d = 1; d <= daysInMonth; d++) {
-      html += `<div class="cal-cell">${d}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b6b6b" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></div>`;
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const todayDate = new Date();
+    const todayMidnight = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate());
+    const baseYear = todayDate.getFullYear(), baseMonth = todayDate.getMonth(); // real "today" — first month of the 3-month window
+    const calendarMonthLabel = document.getElementById('calendar-month-label');
+    const calendarPrevBtn = document.getElementById('calendar-prev');
+    const calendarNextBtn = document.getElementById('calendar-next');
+    const calendarTodayBtn = document.getElementById('calendar-today');
+    let calendarOffset = 0; // 0–2: how many months past the base we're viewing
+    // { 'YYYY-MM-DD': 'booked' | 'closed' } — same live data the owner/staff
+    // consoles write to, so a date marked there shows here too.
+    let calendarAvailability = {};
+
+    function renderPublicCalendar() {
+      const first = new Date(baseYear, baseMonth + calendarOffset, 1);
+      const year = first.getFullYear();
+      const month = first.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const firstWeekday = first.getDay();
+      let html = weekdayLabels.map(l => `<div class="cal-label">${l}</div>`).join('');
+      for (let i = 0; i < firstWeekday; i++) html += `<div class="cal-cell"></div>`;
+      for (let d = 1; d <= daysInMonth; d++) {
+        const cellDate = new Date(year, month, d);
+        const isPast = cellDate < todayMidnight;
+        // Booked and closed both just mean "can't book this" to a guest — no
+        // need to distinguish why, so both collapse to the one closed state.
+        const status = calendarAvailability[dateKey(cellDate)];
+        const unavailable = !isPast && (status === 'booked' || status === 'closed');
+        const stateClass = isPast ? ' cal-cell-past' : unavailable ? ' cal-cell-closed' : '';
+        const title = unavailable ? ' title="Closed"' : '';
+        const icon = unavailable
+          ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>'
+          : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b6b6b" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+        html += `<div class="cal-cell${stateClass}"${title}>${d}${icon}</div>`;
+      }
+      calendar.innerHTML = html;
+      if (calendarMonthLabel) calendarMonthLabel.textContent = `${monthNames[month]} ${year}`;
+      if (calendarPrevBtn) calendarPrevBtn.disabled = calendarOffset <= 0;
+      if (calendarNextBtn) calendarNextBtn.disabled = calendarOffset >= 2;
     }
-    calendar.innerHTML = html;
+    if (calendarPrevBtn) {
+      calendarPrevBtn.addEventListener('click', () => {
+        if (calendarOffset <= 0) return;
+        calendarOffset -= 1;
+        renderPublicCalendar();
+      });
+    }
+    if (calendarNextBtn) {
+      calendarNextBtn.addEventListener('click', () => {
+        if (calendarOffset >= 2) return;
+        calendarOffset += 1;
+        renderPublicCalendar();
+      });
+    }
+    if (calendarTodayBtn) {
+      calendarTodayBtn.addEventListener('click', () => {
+        calendarOffset = 0;
+        renderPublicCalendar();
+      });
+    }
+    renderPublicCalendar();
+    fetchAvailabilityMap().then(map => {
+      calendarAvailability = map;
+      renderPublicCalendar();
+    });
   }
+
+  // Stay Rates / Pool Access tables — filled in from whatever the owner last
+  // saved in Rates & rules; falls back to the numbers already in the markup
+  // if Firestore is unreachable.
+  const rateCellIds = {
+    guests2Weekday: 'rate-guests2-weekday', guests2Weekend: 'rate-guests2-weekend',
+    guests34Weekday: 'rate-guests34-weekday', guests34Weekend: 'rate-guests34-weekend',
+    poolWeekday: 'rate-pool-weekday', poolWeekend: 'rate-pool-weekend',
+  };
+  fetchRates().then(rates => {
+    Object.entries(rateCellIds).forEach(([key, id]) => {
+      const cell = document.getElementById(id);
+      if (!cell) return;
+      const suffix = id.startsWith('rate-pool-') ? ' per person' : '';
+      cell.textContent = `${formatPeso(rates[key])}${suffix}`;
+    });
+  });
 
   // Booking form
   const bookingForm = document.getElementById('booking-form');
@@ -281,6 +384,15 @@ document.addEventListener('DOMContentLoaded', () => {
       return d.toISOString().slice(0, 10);
     }
 
+    // Past dates aren't selectable for either field — local date, not UTC,
+    // so this matches what "today" means to whoever is actually booking.
+    function todayStr() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+    if (checkinInput) checkinInput.min = todayStr();
+    if (checkoutInput) checkoutInput.min = todayStr();
+
     function validateDates() {
       const valid = !checkinInput.value || !checkoutInput.value || checkoutInput.value > checkinInput.value;
       dateError.hidden = valid;
@@ -290,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (checkinInput && checkoutInput && dateError) {
       checkinInput.addEventListener('change', () => {
-        checkoutInput.min = checkinInput.value ? nextDay(checkinInput.value) : '';
+        checkoutInput.min = checkinInput.value ? nextDay(checkinInput.value) : todayStr();
         validateDates();
       });
       checkoutInput.addEventListener('change', validateDates);
@@ -305,7 +417,61 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('booking-thanks').textContent = `Thanks, ${data.name}!`;
       document.getElementById('booking-summary').textContent =
         `Name: ${data.name}\nContact: ${data.contact}\nCheck-in: ${data.checkin || '—'}\nCheck-out: ${data.checkout || '—'}\nGuests: ${data.guests}` +
+        (data.email ? `\nEmail: ${data.email}` : '') +
+        (data.promoCode ? `\nPromo code: ${data.promoCode}` : '') +
         (data.message ? `\nNote: ${data.message}` : '');
+    });
+
+    // "Send Inquiry" opens the Terms & Conditions modal instead of submitting
+    // directly — the actual submission only happens from the modal's own
+    // Send Inquiry button, which stays disabled until the guest checks agree.
+    const bookingOpenTosBtn = document.getElementById('booking-open-tos');
+    const tosModal = document.getElementById('tos-modal');
+    const tosModalClose = document.getElementById('tos-modal-close');
+    const tosAgreeCheckbox = document.getElementById('tos-agree-checkbox');
+    const tosConfirmBtn = document.getElementById('tos-confirm-btn');
+
+    function openTosModal() {
+      if (!tosModal) return;
+      if (tosAgreeCheckbox) tosAgreeCheckbox.checked = false;
+      if (tosConfirmBtn) tosConfirmBtn.disabled = true;
+      tosModal.classList.add('open');
+      tosModal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('no-scroll');
+    }
+    function closeTosModal() {
+      if (!tosModal) return;
+      tosModal.classList.remove('open');
+      tosModal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('no-scroll');
+    }
+    if (bookingOpenTosBtn) {
+      bookingOpenTosBtn.addEventListener('click', () => {
+        // Reuses native required-field validation so empty fields still get
+        // flagged before we bother showing the terms.
+        if (!bookingForm.reportValidity()) return;
+        openTosModal();
+      });
+    }
+    if (tosAgreeCheckbox && tosConfirmBtn) {
+      tosAgreeCheckbox.addEventListener('change', () => {
+        tosConfirmBtn.disabled = !tosAgreeCheckbox.checked;
+      });
+    }
+    if (tosConfirmBtn) {
+      tosConfirmBtn.addEventListener('click', () => {
+        closeTosModal();
+        bookingForm.requestSubmit();
+      });
+    }
+    if (tosModalClose) tosModalClose.addEventListener('click', closeTosModal);
+    if (tosModal) {
+      tosModal.addEventListener('click', (e) => {
+        if (e.target === tosModal) closeTosModal();
+      });
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && tosModal && tosModal.classList.contains('open')) closeTosModal();
     });
     const bookingEditBtn = document.getElementById('booking-edit');
     if (bookingEditBtn) {
@@ -365,16 +531,19 @@ document.addEventListener('DOMContentLoaded', () => {
     aboutFadeObserver.observe(aboutTextFade);
   }
 
-  // About Us photo — slide in from the left once when scrolled into view
+  // About Us photo — wipes in once scrolled into view. Observes .about-grid rather than
+  // the photo itself, since the photo's own clip-path (used for the wipe) reads as zero-area
+  // to IntersectionObserver and would never report as intersecting.
   const aboutPhotoFade = document.querySelector('.about-photo-fade');
-  if (aboutPhotoFade) {
+  const aboutPhotoTrigger = document.querySelector('.about-grid');
+  if (aboutPhotoFade && aboutPhotoTrigger) {
     const aboutPhotoObserver = new IntersectionObserver(([entry], observer) => {
       if (entry.isIntersecting) {
         aboutPhotoFade.classList.add('is-visible');
         observer.disconnect();
       }
     }, { threshold: 0.25 });
-    aboutPhotoObserver.observe(aboutPhotoFade);
+    aboutPhotoObserver.observe(aboutPhotoTrigger);
   }
 
   // Hero background — cross-fade cycle (nav is transparent and shares this same layer)
